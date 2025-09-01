@@ -1,20 +1,33 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from database.db import init_db
+from utils.constants import messages
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
-    yield
-    print("Application shutting down...")
+    logger.info(messages["db_connection"])
+
+    try:
+        yield
+    finally:
+        logger.info(messages["shutdown"])
 
 app = FastAPI(
-    title="Events Management API",
-    description="A REST API to manage events",
-    version="1.0.0",
+    title=messages["app_title"],
+    description=messages["app_description"],
+    version=messages["app_version"],
     lifespan=lifespan
 )
 
 @app.get("/")
 def read_root():
-    return "Event Management System API"
+    return messages["welcome"]
