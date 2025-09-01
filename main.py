@@ -4,4 +4,4 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {'message': "Event Management System API"}
+    return "Event Management System API"
