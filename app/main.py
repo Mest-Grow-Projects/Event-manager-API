@@ -1,15 +1,8 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from database.db import init_db
-from utils.constants import messages
-import logging
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
+from app.database.db import init_db
+from app.core.constants import messages
+from app.core.logging_config import logger
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
