@@ -5,7 +5,8 @@ import os
 class Settings(BaseSettings):
     ENVIRONMENT: str = 'development'
     DATABASE_URL: str
-    SECRETE_KEY: str
+    SECRET_KEY: str
+    ALGORITHM: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(
@@ -13,7 +14,6 @@ class Settings(BaseSettings):
             '.env'
         ), env_file_encoding='utf-8'
     )
-
 
 @lru_cache
 def get_settings() -> Settings:
