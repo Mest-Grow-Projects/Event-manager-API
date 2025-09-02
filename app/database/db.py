@@ -1,8 +1,8 @@
 from beanie import init_beanie
 from pymongo import AsyncMongoClient
 import os
-from models.user import User
-from ..utils import constants
+from app.models.user import User
+from ..core import constants
 
 mongo_client = None
 
