@@ -10,3 +10,8 @@ messages = {
 error_messages = {
     "database_url": "DATABASE_URL environment variable is not set"
 }
+
+status_messages = {
+    "not_found": "User not found",
+    "conflict": "User with this email already exists"
+}
