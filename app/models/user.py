@@ -31,8 +31,8 @@ class User(Document):
     gender: Gender | None
     avatar: str | None
     dob: datetime | None
-    createdAt: datetime = Field(default_factory=datetime.now())
-    updatedAt: datetime = Field(default_factory=datetime.now())
+    createdAt: datetime = Field(default_factory=datetime.now)
+    updatedAt: datetime = Field(default_factory=datetime.now)
 
     class Settings:
         name = 'users'
