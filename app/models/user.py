@@ -1,13 +1,12 @@
 from enum import Enum
 from typing import Annotated
-
 from pydantic import EmailStr, Field
 from datetime import datetime
 from beanie import Document, Indexed
 import pymongo
 
 class Roles(str, Enum):
-    USER = "USER"
+    ATTENDEE = "ATTENDEE"
     ORGANIZER = "ORGANIZER"
     ADMIN = "ADMIN"
 
@@ -17,7 +16,7 @@ class User(Document):
     phone: str | None
     location: str | None
     password: str
-    role: Roles = Roles.USER
+    role: Roles = Roles.ATTENDEE
     createdAt: datetime = Field(default_factory=datetime.now())
     updatedAt: datetime = Field(default_factory=datetime.now())
 
