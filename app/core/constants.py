@@ -15,3 +15,8 @@ status_messages = {
     "not_found": "User not found",
     "conflict": "User with this email already exists"
 }
+
+origins = [
+    "http://localhost:4200",
+    "http://localhost:8080",
+]
