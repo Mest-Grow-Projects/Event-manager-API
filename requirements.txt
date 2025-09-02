@@ -1,3 +1,5 @@
 fastapi[standard]
 beanie
 pydantic-settings
+pyjwt
+passlib[bcrypt]
