@@ -13,7 +13,8 @@ error_messages = {
 
 status_messages = {
     "not_found": "User not found",
-    "conflict": "User with this email already exists"
+    "conflict": "User with this email already exists",
+    "credentials_error": "Could not validate credentials"
 }
 
 origins = [
