@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field, model_validator, field_validator
 import re
+from app.core.constants import validations, patterns_regex
 
 class Token(BaseModel):
     access_token: str
