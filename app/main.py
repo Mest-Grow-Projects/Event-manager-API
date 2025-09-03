@@ -5,6 +5,8 @@ from app.database.db import init_db
 from app.core.constants import messages, origins
 from app.core.logging_config import logger
 
+from app.auth.auth_route import router as auth_router
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
@@ -30,6 +32,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
+@app.get(
+    "/",
+    tags=["App"],
+    summary="Application base route"
+)
 def read_root():
     return messages["welcome"]
+
+app.include_router(auth_router, prefix="/api")
