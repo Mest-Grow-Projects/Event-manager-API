@@ -11,7 +11,7 @@ async def find_user_by_email(email: str) -> User:
         )
     return user
 
-async def find_user_by_id(user_id: int) -> User:
+async def find_user_by_id(user_id: str) -> User:
     user = await User.find_one(User.id == user_id)
     if not user:
         raise HTTPException(
