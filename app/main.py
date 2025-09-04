@@ -6,6 +6,7 @@ from app.core.constants import messages, origins
 from app.core.logging_config import logger
 
 from app.auth.auth_route import router as auth_router
+from app.users.users_route import router as users_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -41,3 +42,4 @@ def read_root():
     return messages["welcome"]
 
 app.include_router(auth_router, prefix="/api")
+app.include_router(users_router, prefix="/api")
