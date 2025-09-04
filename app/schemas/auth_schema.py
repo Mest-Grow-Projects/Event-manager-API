@@ -65,10 +65,13 @@ class VerifyAccount(BaseModel):
     model_config = {"extra": "forbid"}
 
 
+class SignupData(BaseModel):
+    token: str
+    verification_code: str
+
 class SignupResponse(BaseModel):
     message: str
-    token: str
-
+    data: SignupData
 
 class VerifyAccountResponse(BaseModel):
     message: str

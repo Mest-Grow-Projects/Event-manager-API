@@ -42,7 +42,10 @@ class AuthService:
 
         return {
             'message': success_messages['signup'],
-            'token': token,
+            'data': {
+                'token': token,
+                'verification_code': verification_code,
+            },
         }
 
 
