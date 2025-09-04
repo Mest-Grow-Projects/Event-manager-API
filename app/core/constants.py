@@ -16,6 +16,8 @@ status_messages = {
     "conflict": "User with this email already exists",
     "credentials_error": "Could not validate credentials",
     "code_required": "Verification code is required",
+    "update_invalid": "No valid fields provided for update",
+    "user_id_required": "User ID is required",
 }
 
 origins = [
@@ -32,6 +34,13 @@ success_messages = {
     "verify_account": "Account verified successfully",
     "login": "Login successful",
     "signup": "Signup successful",
+    "all_users": "Users retrieved successfully",
+    "found_user": "User found successfully",
+    "update_user": "User updated successfully",
+    "delete_user": "User deleted successfully",
+    "add_app_admin": "Admin added successfully",
+    "change_role_status": "User role status changed successfully",
+    "add_organizer": "Organizer added successfully",
 }
 
 validations = {
