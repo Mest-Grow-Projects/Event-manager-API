@@ -1,9 +1,9 @@
 from fastapi import HTTPException, status
 from pydantic import BaseModel
+from app.core.security.password_hash import get_password_hash
 from app.database.models.user import User, Roles, AccountStatus
 from app.core.constants import status_messages
 from app.schemas.auth_schema import SignupSchema
-from app.utils.auth_utils import get_password_hash
 
 
 async def find_user_by_email(email: str) -> User:
@@ -38,7 +38,7 @@ async def check_existing_user(email: str) -> bool:
 
 async def create_user(
     user: SignupSchema,
-    role: Roles,
+    role: Roles = Roles.ATTENDEE,
     account_status: AccountStatus = AccountStatus.PENDING
 ) -> User:
     await check_existing_user(str(user.email))
