@@ -118,7 +118,14 @@ class AuthService:
                 detail=validations["invalid_credentials"]
             )
 
-        access_token = create_access_token(data={"sub": str(found_user.email)})
+        access_token = create_access_token(
+            data={
+                "sub": str(found_user.email),
+                "name": found_user.name,
+                "role": found_user.role,
+                "accountStatus": found_user.accountStatus,
+            }
+        )
         return {
             "message": success_messages['login'],
             "data": {
