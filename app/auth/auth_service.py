@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from app.core.constants import validations, success_messages, status_messages
 from app.schemas.auth_schema import SignupSchema, LoginSchema, VerifyAccount
-from app.models.user import User, AccountStatus
+from app.database.models.user import User, AccountStatus
 from app.database.repository.user_repo import check_existing_user, find_user_by_email
 from app.utils.auth_utils import (
     generate_verification_code,

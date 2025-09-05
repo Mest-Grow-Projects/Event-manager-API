@@ -8,7 +8,7 @@ from jwt.exceptions import InvalidTokenError
 from app.core.config import get_settings
 from fastapi.security import OAuth2PasswordBearer
 from app.core.constants import status_messages
-from app.models.user import User
+from app.database.models.user import User
 from app.schemas.auth_schema import TokenData
 from app.database.repository.user_repo import find_user_by_id
 

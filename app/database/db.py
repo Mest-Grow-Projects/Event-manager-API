@@ -1,7 +1,7 @@
 from beanie import init_beanie
 from pymongo import AsyncMongoClient
 import os
-from app.models.user import User
+from app.database.models.user import User
 from app.core.constants import error_messages
 from dotenv import load_dotenv
 

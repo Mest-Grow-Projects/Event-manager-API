@@ -2,7 +2,7 @@ from typing import List
 from datetime import datetime
 from beanie import PydanticObjectId
 from pydantic import BaseModel
-from app.models.user import Roles, AccountStatus, Gender
+from app.database.models.user import Roles, AccountStatus, Gender
 
 
 class UserInfo(BaseModel):

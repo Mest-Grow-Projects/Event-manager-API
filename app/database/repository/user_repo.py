@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from app.models.user import User
+from app.database.models.user import User
 from app.core.constants import status_messages
 
 async def find_user_by_email(email: str) -> User:
