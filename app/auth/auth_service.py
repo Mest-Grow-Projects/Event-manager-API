@@ -1,11 +1,11 @@
 from fastapi import HTTPException, status
 from app.core.constants import validations, success_messages, status_messages
+from app.core.security.password_hash import verify_password
 from app.schemas.auth_schema import SignupSchema, LoginSchema, VerifyAccount
 from app.database.models.user import AccountStatus
 from app.database.repository.user_repo import find_user_by_email, create_user
 from app.utils.auth_utils import (
     generate_verification_code,
-    verify_password,
     create_access_token
 )
 from datetime import timedelta, datetime, timezone
