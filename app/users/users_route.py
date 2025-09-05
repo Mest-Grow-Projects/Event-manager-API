@@ -1,11 +1,13 @@
-from fastapi import APIRouter, status
+from typing import Annotated
+from fastapi import APIRouter, status, Depends
 from .users_service import users_service
 from app.schemas.users_schema import (
     UsersResponse,
     UserResponse,
     UpdateUserInfo,
     ChangeRole,
-    MessageResponse
+    MessageResponse,
+    FilterQuery
 )
 from ..schemas.auth_schema import SignupSchema
 
@@ -20,8 +22,8 @@ router = APIRouter(
     summary="Get all users",
     response_model=UsersResponse,
 )
-async def get_users():
-    return await users_service.get_all_users()
+async def get_users(filter_query: FilterQuery = Depends()):
+    return await users_service.get_all_users(filter_query)
 
 @router.get(
     "/{user_id}",
