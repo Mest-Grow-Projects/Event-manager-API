@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Literal
 from datetime import datetime
 from beanie import PydanticObjectId
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from app.database.models.user import Roles, AccountStatus, Gender
 
 
@@ -48,3 +48,14 @@ class ChangeRole(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str
+
+class FilterQuery(BaseModel):
+    name: str | None = None
+    gender: Gender | None = None,
+    role: Roles | None = None,
+    account_status: AccountStatus | None = None,
+    order_by: Literal["created_at", "updated_at"] = "created_at"
+    page: int = Field(1, ge=1),
+    limit: int = Field(10, ge=1, le=100),
+
+    model_config = {"extra": "forbid"}
