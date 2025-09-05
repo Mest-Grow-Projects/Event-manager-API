@@ -2,7 +2,6 @@ import random
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
-from passlib.context import CryptContext
 import jwt
 from jwt.exceptions import InvalidTokenError
 from app.core.config import get_settings
@@ -12,21 +11,12 @@ from app.database.models.user import User
 from app.schemas.auth_schema import TokenData
 from app.database.repository.user_repo import find_user_by_id
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 SECRET_KEY = get_settings().SECRET_KEY
 ALGORITHM = get_settings().ALGORITHM
 access_token_expire = get_settings().ACCESS_TOKEN_EXPIRE_MINUTES
 refresh_token_expire = get_settings().REFRESH_TOKEN_EXPIRE_DAYS
-
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
@@ -66,10 +56,6 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
     if user is None:
         raise credentials_exception
     return user
-
-
-def password_match(password: str, confirm_password: str) -> bool:
-    return password == confirm_password
 
 
 def generate_verification_code() -> str:
