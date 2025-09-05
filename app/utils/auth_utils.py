@@ -1,11 +1,11 @@
 import random
 from datetime import timedelta, datetime, timezone
+from typing import Any
+
 import jwt
 from app.core.config import get_settings
-from fastapi.security import OAuth2PasswordBearer
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 SECRET_KEY = get_settings().SECRET_KEY
 ALGORITHM = get_settings().ALGORITHM
 access_token_expire = get_settings().ACCESS_TOKEN_EXPIRE_MINUTES
@@ -31,3 +31,11 @@ def create_refresh_token(data: dict) -> str:
 
 def generate_verification_code() -> str:
     return str(random.randint(100000, 999999))
+
+
+def decode_jwt(token: str) -> dict | None:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except jwt.InvalidTokenError:
+        return None
