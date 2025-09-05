@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from app.core.constants import success_messages, status_messages
-from app.database.repository.user_repo import find_user_by_id, create_user
+from app.database.repository.user_repo import create_user, get_and_validate_user
 from app.database.models.user import User, AccountStatus, Roles
 from app.schemas.auth_schema import SignupSchema
 from app.schemas.users_schema import UpdateUserInfo, ChangeRole
@@ -16,12 +16,7 @@ class UsersService:
 
 
     async def get_user_by_id(self, user_id: str):
-        if not user_id:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=status_messages["user_id_required"],
-            )
-        found_user = await find_user_by_id(user_id)
+        found_user = await get_and_validate_user(user_id)
 
         return {
             "message": success_messages["found_user"],
@@ -42,13 +37,7 @@ class UsersService:
 
 
     async def update_user_by_id(self, user_id: str, data: UpdateUserInfo):
-        if not user_id:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=status_messages["user_id_required"],
-            )
-
-        updated_user = await find_user_by_id(user_id)
+        updated_user = await get_and_validate_user(user_id)
         updated_data = data.model_dump(exclude_unset=True, exclude_none=True)
 
         if not updated_data:
@@ -65,14 +54,8 @@ class UsersService:
 
 
     async def delete_user_by_id(self, user_id: str):
-        if not user_id:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=status_messages["user_id_required"],
-            )
-
-        user = await find_user_by_id(user_id)
-        await user.delete()
+        user_to_delete = await get_and_validate_user(user_id)
+        await user_to_delete.delete()
         return { "message": success_messages["delete_user"] }
 
 
@@ -101,13 +84,7 @@ class UsersService:
 
 
     async def change_role_status(self, user_id: str, data: ChangeRole):
-        if not user_id:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=status_messages["user_id_required"],
-            )
-
-        updated_role = await find_user_by_id(user_id)
+        updated_user_role = await get_and_validate_user(user_id)
         updated_data = data.model_dump(exclude_unset=True, exclude_none=True)
 
         if not updated_data:
@@ -115,8 +92,7 @@ class UsersService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=status_messages["update_invalid"],
             )
-
-        await updated_role.set(updated_data)
+        await updated_user_role.set(updated_data)
 
         return {
             "message": success_messages["change_role_status"],
