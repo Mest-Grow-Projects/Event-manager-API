@@ -14,11 +14,12 @@ error_messages = {
 status_messages = {
     "not_found": "User not found",
     "conflict": "User with this email already exists",
-    "credentials_error": "Could not validate credentials",
+    "credentials_error": "Could not validate user credentials",
     "code_required": "Verification code is required",
     "update_invalid": "No valid fields provided for update",
     "user_id_required": "User ID is required",
-    "failed_user": "Failed to create a new user"
+    "failed_user": "Failed to create a new user",
+    "access_denied": "Unauthorized access, no token provided"
 }
 
 origins = [
