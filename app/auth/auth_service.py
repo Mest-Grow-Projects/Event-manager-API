@@ -1,11 +1,10 @@
 from fastapi import HTTPException, status
 from app.core.constants import validations, success_messages, status_messages
 from app.schemas.auth_schema import SignupSchema, LoginSchema, VerifyAccount
-from app.database.models.user import User, AccountStatus
-from app.database.repository.user_repo import check_existing_user, find_user_by_email
+from app.database.models.user import AccountStatus
+from app.database.repository.user_repo import find_user_by_email, create_user
 from app.utils.auth_utils import (
     generate_verification_code,
-    get_password_hash,
     verify_password,
     create_access_token
 )
@@ -22,16 +21,8 @@ class AuthService:
         self.signup_token_duration = timedelta(minutes=30)
 
     async def signup(self, user: SignupSchema):
-        await check_existing_user(str(user.email))
+        await create_user(user)
         verification_code = generate_verification_code()
-        hashed_password = get_password_hash(user.password)
-
-        new_user = User(
-            name=user.name,
-            email=user.email,
-            password=hashed_password
-        )
-        await new_user.insert()
 
         payload = {
             "sub": str(user.email),
