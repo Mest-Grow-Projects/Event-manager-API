@@ -18,6 +18,7 @@ status_messages = {
     "code_required": "Verification code is required",
     "update_invalid": "No valid fields provided for update",
     "user_id_required": "User ID is required",
+    "failed_user": "Failed to create a new user"
 }
 
 origins = [
