@@ -77,6 +77,7 @@ class VerifyAccountResponse(BaseModel):
     message: str
 
 class UserResponse(BaseModel):
+    id: str
     name: str
     email: str
     accountStatus: str
