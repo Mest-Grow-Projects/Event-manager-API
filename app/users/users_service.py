@@ -1,45 +1,43 @@
-from enum import Enum
 from fastapi import Query
 from app.core.constants import success_messages
 from app.database.repository.user_repo import create_user, get_and_validate_user, validate_updated_data
-from app.database.models.user import User, AccountStatus, Roles, Gender
+from app.database.models.user import User, AccountStatus, Roles
 from app.schemas.auth_schema import SignupSchema
-from app.schemas.users_schema import UpdateUserInfo, ChangeRole
+from app.schemas.users_schema import UpdateUserInfo, ChangeRole, FilterQuery
+from typing import Annotated
 
 
 class UsersService:
-    async def get_all_users(
-        self,
-        name: str | None = None,
-        gender: Gender | None = None,
-        role: Roles | None = None,
-        account_status: AccountStatus | None = None,
-        page: int = Query(1, ge=1),
-        limit: int = Query(10, ge=1, le=100),
-    ):
-        skip = (page - 1) * limit
+    async def get_all_users(self, filter_query: Annotated[FilterQuery, Query()]):
+        skip = (filter_query.page - 1) * filter_query.limit
         query = {}
 
-        if name:
-            query["name"] = {"$regex": name, "$options": "i"}
-        if gender:
-            query["gender"] = gender.value if isinstance(gender, Enum) else gender
-        if role:
-            query["role"] = role.value if isinstance(role, Enum) else role
-        if account_status:
-            query["accountStatus"] = account_status.value if isinstance(account_status, Enum) else account_status
+        if filter_query.name:
+            query["name"] = {"$regex": filter_query.name, "$options": "i"}
+        if filter_query.gender:
+            query["gender"] = filter_query.gender.value
+        if filter_query.role:
+            query["role"] = filter_query.role.value
+        if filter_query.account_status:
+            query["accountStatus"] = filter_query.account_status.value
 
         total_users_count = await User.find(query).count()
-        users = await User.find(query).skip(skip).limit(limit).to_list()
+        users = (
+            await User.find(query)
+            .sort(f"-{filter_query.order_by}")
+            .skip(skip)
+            .limit(filter_query.limit)
+            .to_list()
+        )
 
         return {
             "message": success_messages["all_users"],
             "data": users,
             "pagination": {
                 "total": total_users_count,
-                "page": page,
-                "limit": limit,
-                "total_pages": (total_users_count + limit -1) // limit,
+                "page": filter_query.page,
+                "limit": filter_query.limit,
+                "total_pages": (total_users_count + filter_query.limit -1) // filter_query.limit,
             }
         }
 
