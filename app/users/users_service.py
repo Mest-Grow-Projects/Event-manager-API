@@ -1,10 +1,9 @@
 from fastapi import HTTPException, status
 from app.core.constants import success_messages, status_messages
-from app.database.repository.user_repo import find_user_by_id, check_existing_user
+from app.database.repository.user_repo import find_user_by_id, create_user
 from app.database.models.user import User, AccountStatus, Roles
 from app.schemas.auth_schema import SignupSchema
 from app.schemas.users_schema import UpdateUserInfo, ChangeRole
-from app.utils.auth_utils import get_password_hash
 
 
 class UsersService:
@@ -78,16 +77,11 @@ class UsersService:
 
 
     async def add_app_admin(self, user: SignupSchema):
-        found_user = await check_existing_user(str(user.email))
-        hashed_password = get_password_hash(user.password)
-
-        await User(
-            name=user.name,
-            email=user.email,
-            password=hashed_password,
-            accountStatus=AccountStatus.VERIFIED,
-            role=Roles.ADMIN
-        ).insert()
+        await create_user(
+            user=user,
+            role=Roles.ADMIN,
+            account_status=AccountStatus.VERIFIED,
+        )
 
         return {
             "message": success_messages["add_app_admin"],
@@ -95,16 +89,11 @@ class UsersService:
 
 
     async def add_organizer(self, user: SignupSchema):
-        await check_existing_user(str(user.email))
-        hashed_password = get_password_hash(user.password)
-
-        await User(
-            name=user.name,
-            email=user.email,
-            password=hashed_password,
-            accountStatus=AccountStatus.VERIFIED,
-            role=Roles.ORGANIZER
-        ).insert()
+        await create_user(
+            user=user,
+            role=Roles.ORGANIZER,
+            account_status=AccountStatus.VERIFIED,
+        )
 
         return {
             "message": success_messages["add_organizer"],
