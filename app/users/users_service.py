@@ -1,6 +1,5 @@
-from fastapi import HTTPException, status
-from app.core.constants import success_messages, status_messages
-from app.database.repository.user_repo import create_user, get_and_validate_user
+from app.core.constants import success_messages
+from app.database.repository.user_repo import create_user, get_and_validate_user, validate_updated_data
 from app.database.models.user import User, AccountStatus, Roles
 from app.schemas.auth_schema import SignupSchema
 from app.schemas.users_schema import UpdateUserInfo, ChangeRole
@@ -38,15 +37,9 @@ class UsersService:
 
     async def update_user_by_id(self, user_id: str, data: UpdateUserInfo):
         updated_user = await get_and_validate_user(user_id)
-        updated_data = data.model_dump(exclude_unset=True, exclude_none=True)
-
-        if not updated_data:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=status_messages["update_invalid"],
-            )
-
+        updated_data = validate_updated_data(data)
         await  updated_user.set(updated_data)
+
         return {
             "message": success_messages["update_user"],
             "data": updated_user
@@ -85,13 +78,7 @@ class UsersService:
 
     async def change_role_status(self, user_id: str, data: ChangeRole):
         updated_user_role = await get_and_validate_user(user_id)
-        updated_data = data.model_dump(exclude_unset=True, exclude_none=True)
-
-        if not updated_data:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=status_messages["update_invalid"],
-            )
+        updated_data = validate_updated_data(data)
         await updated_user_role.set(updated_data)
 
         return {
