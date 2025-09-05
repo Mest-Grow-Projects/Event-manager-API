@@ -24,9 +24,16 @@ class UserResponse(BaseModel):
     message: str
     data: UserInfo
 
+class PaginationResponse(BaseModel):
+    total: int
+    page: int
+    limit: int
+    tota_pages: int
+
 class UsersResponse(BaseModel):
     message: str
     data: List[UserInfo]
+    pagination: PaginationResponse
 
 class UpdateUserInfo(BaseModel):
     name: str | None = None
