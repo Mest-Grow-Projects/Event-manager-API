@@ -28,7 +28,7 @@ class PaginationResponse(BaseModel):
     total: int
     page: int
     limit: int
-    tota_pages: int
+    total_pages: int
 
 class UsersResponse(BaseModel):
     message: str
@@ -51,11 +51,11 @@ class MessageResponse(BaseModel):
 
 class FilterQuery(BaseModel):
     name: str | None = None
-    gender: Gender | None = None,
-    role: Roles | None = None,
-    account_status: AccountStatus | None = None,
+    gender: Gender | None = None
+    role: Roles | None = None
+    account_status: AccountStatus | None = None
     order_by: Literal["created_at", "updated_at"] = "created_at"
-    page: int = Field(1, ge=1),
-    limit: int = Field(10, ge=1, le=100),
+    page: int = Field(1, ge=1)
+    limit: int = Field(10, ge=1, le=50)
 
     model_config = {"extra": "forbid"}
