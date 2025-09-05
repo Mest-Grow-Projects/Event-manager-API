@@ -111,7 +111,7 @@ class AuthService:
 
         access_token = create_access_token(
             data={
-                "sub": str(found_user.email),
+                "sub": str(found_user.id),
                 "name": found_user.name,
                 "role": found_user.role,
                 "accountStatus": found_user.accountStatus,
@@ -122,6 +122,7 @@ class AuthService:
             "data": {
                 "access_token": access_token,
                 "user": {
+                    "id": found_user.id,
                     "name": found_user.name,
                     "email": found_user.email,
                     "role": found_user.role,
