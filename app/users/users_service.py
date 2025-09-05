@@ -1,14 +1,12 @@
-from fastapi import Query
 from app.core.constants import success_messages
 from app.database.repository.user_repo import create_user, get_and_validate_user, validate_updated_data
 from app.database.models.user import User, AccountStatus, Roles
 from app.schemas.auth_schema import SignupSchema
 from app.schemas.users_schema import UpdateUserInfo, ChangeRole, FilterQuery
-from typing import Annotated
 
 
 class UsersService:
-    async def get_all_users(self, filter_query: Annotated[FilterQuery, Query()]):
+    async def get_all_users(self, filter_query: FilterQuery):
         skip = (filter_query.page - 1) * filter_query.limit
         query = {}
 
