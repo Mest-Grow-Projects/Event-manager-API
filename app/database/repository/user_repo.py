@@ -1,4 +1,6 @@
 from fastapi import HTTPException, status
+from watchfiles import awatch
+
 from app.database.models.user import User, Roles, AccountStatus
 from app.core.constants import status_messages
 from app.schemas.auth_schema import SignupSchema
@@ -57,3 +59,13 @@ async def create_user(
             detail=status_messages["failed_user"]
         )
     return new_user
+
+
+async def get_and_validate_user(user_id: str) -> User:
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=status_messages["user_id_required"],
+        )
+    user = await find_user_by_id(user_id)
+    return user
