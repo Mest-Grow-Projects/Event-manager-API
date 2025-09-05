@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from app.core.constants import success_messages, status_messages
-from app.database.repo.user_repo import find_user_by_id, check_existing_user
+from app.database.repository.user_repo import find_user_by_id, check_existing_user
 from app.models.user import User, AccountStatus, Roles
 from app.schemas.auth_schema import SignupSchema
 from app.schemas.users_schema import UpdateUserInfo, ChangeRole

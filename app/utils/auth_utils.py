@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordBearer
 from app.core.constants import status_messages
 from app.models.user import User
 from app.schemas.auth_schema import TokenData
-from app.database.repo.user_repo import find_user_by_id
+from app.database.repository.user_repo import find_user_by_id
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
