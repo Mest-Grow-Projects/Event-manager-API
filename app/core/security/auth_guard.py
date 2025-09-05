@@ -1,38 +1,38 @@
 from typing import Annotated
-from fastapi import Depends, HTTPException, status
+from fastapi import Header, HTTPException, status
 from ..config import get_settings
-from fastapi.security import OAuth2PasswordBearer
-import jwt
-from jwt.exceptions import InvalidTokenError
 from ..constants import status_messages
-from app.database.models.user import User, AccountStatus
 from app.database.repository.user_repo import find_user_by_id
-from app.schemas.auth_schema import TokenData
+from app.schemas.auth_schema import UserResponse
+from app.utils.auth_utils import decode_jwt
 
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 settings = get_settings()
+AUTH_PREFIX = 'Bearer'
 
 
-async def get_authenticated_user(self, token: Annotated[str, Depends(oauth2_scheme)]) -> User:
+async def get_authenticated_user(authorization: Annotated[str | None, Header()] = None) -> UserResponse:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail=status_messages["credentials_error"],
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        user_id = payload.get("sub")
-
-        if user_id is None:
-            raise credentials_exception
-        token_data = TokenData(sub=user_id)
-    except InvalidTokenError:
+    if not authorization:
+        raise credentials_exception
+    if not authorization.startswith(AUTH_PREFIX):
         raise credentials_exception
 
-    user = await find_user_by_id(token_data.sub)
-    if user is None or user.accountStatus != AccountStatus.VERIFIED:
-        raise credentials_exception
-
-    return user
+    payload = decode_jwt(token=authorization[len(AUTH_PREFIX):])
+    if payload and payload["sub"]:
+        try:
+            user = await find_user_by_id(payload['sub'])
+            return UserResponse(
+                id = str(user.id),
+                name = user.name,
+                email = str(user.email),
+                role = user.role,
+                accountStatus = user.accountStatus
+            )
+        except Exception as error:
+            raise error
+    raise credentials_exception
