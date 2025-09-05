@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, status, Depends
 from .users_service import users_service
 from app.schemas.users_schema import (
     UsersResponse,
@@ -22,13 +22,7 @@ router = APIRouter(
     response_model=UsersResponse,
 )
 async def get_users(filter_query: FilterQuery = Depends()):
-    try:
-        return await users_service.get_all_users(filter_query)
-    except Exception as error:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error
-        )
+    return await users_service.get_all_users(filter_query)
 
 @router.get(
     "/{user_id}",
@@ -37,13 +31,7 @@ async def get_users(filter_query: FilterQuery = Depends()):
     response_model=UserResponse,
 )
 async def get_user_profile(user_id: str):
-    try:
-        return await users_service.get_user_by_id(user_id)
-    except Exception as error:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error
-        )
+    return await users_service.get_user_by_id(user_id)
 
 @router.patch(
     "/{user_id}",
@@ -52,13 +40,7 @@ async def get_user_profile(user_id: str):
     response_model=UserResponse,
 )
 async def update_user_bio(user_id: str, bio: UpdateUserInfo):
-    try:
-        return await users_service.update_user_by_id(user_id, bio)
-    except Exception as error:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error
-        )
+    return await users_service.update_user_by_id(user_id, bio)
 
 @router.delete(
     "/{user_id}",
@@ -67,13 +49,7 @@ async def update_user_bio(user_id: str, bio: UpdateUserInfo):
     response_model=MessageResponse,
 )
 async def delete_user_profile(user_id: str):
-    try:
-        return await users_service.delete_user_by_id(user_id)
-    except Exception as error:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error
-        )
+    return await users_service.delete_user_by_id(user_id)
 
 @router.post(
     "/add-admin",
@@ -82,13 +58,7 @@ async def delete_user_profile(user_id: str):
     response_model=MessageResponse,
 )
 async def create_admin(user: SignupSchema):
-    try:
-        return await users_service.add_app_admin(user)
-    except Exception as error:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error
-        )
+    return await users_service.add_app_admin(user)
 
 @router.post(
     "/add-organizer",
@@ -97,13 +67,7 @@ async def create_admin(user: SignupSchema):
     response_model=MessageResponse,
 )
 async def create_organizer(user: SignupSchema):
-    try:
-        return await users_service.add_organizer(user)
-    except Exception as error:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error
-        )
+    return await users_service.add_organizer(user)
 
 @router.patch(
     "/update_role/{user_id}",
@@ -112,10 +76,4 @@ async def create_organizer(user: SignupSchema):
     response_model=MessageResponse,
 )
 async def update_user_role(user_id: str, data: ChangeRole):
-    try:
-        return await users_service.change_role_status(user_id, data)
-    except Exception as error:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error
-        )
+    return await users_service.change_role_status(user_id, data)
