@@ -20,11 +20,12 @@ ALGORITHM = get_settings().ALGORITHM
 access_token_expire = get_settings().ACCESS_TOKEN_EXPIRE_MINUTES
 refresh_token_expire = get_settings().REFRESH_TOKEN_EXPIRE_DAYS
 
-def verify_password(plain_password, hashed_password) -> bool:
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password) -> str:
+def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
@@ -66,8 +67,10 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
         raise credentials_exception
     return user
 
+
 def password_match(password: str, confirm_password: str) -> bool:
     return password == confirm_password
+
 
 def generate_verification_code() -> str:
     return str(random.randint(100000, 999999))

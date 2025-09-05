@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 import os
 
+
 class Settings(BaseSettings):
     ENVIRONMENT: str = 'development'
     DATABASE_URL: str
@@ -16,6 +17,7 @@ class Settings(BaseSettings):
             '.env'
         ), env_file_encoding='utf-8'
     )
+
 
 @lru_cache
 def get_settings() -> Settings:
