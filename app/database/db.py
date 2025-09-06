@@ -1,9 +1,11 @@
 from beanie import init_beanie
 from pymongo import AsyncMongoClient
 import os
-from app.database.models.user import User
 from app.core.constants import error_messages
 from dotenv import load_dotenv
+
+from app.database.models.user import User
+from app.database.models.events import Events
 
 mongo_client = None
 
@@ -19,5 +21,5 @@ async def init_db():
 
     await init_beanie(
         database=mongo_client.get_default_database(),
-        document_models=[User]
+        document_models=[User, Events]
     )
