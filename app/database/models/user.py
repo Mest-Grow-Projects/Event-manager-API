@@ -1,9 +1,10 @@
 from enum import Enum
-from pydantic import EmailStr, Field
 from datetime import datetime
 from beanie import Document, Indexed
 import pymongo
 from typing import Annotated
+from app.database.models.base_mixin import TimestampMixin
+
 
 class Roles(str, Enum):
     ATTENDEE = "ATTENDEE"
@@ -20,11 +21,11 @@ class Gender(str, Enum):
     FEMALE = "FEMALE"
     NON_BINARY = "NON_BINARY"
 
-class User(Document):
+class User(Document, TimestampMixin):
     name: str
-    email: Annotated[EmailStr, Indexed(unique=True)]
+    email: Annotated[str, Indexed(unique=True)]
     phone: str | None = None
-    location: str | None = None
+    address: str | None = None
     password: str
     role: Roles = Roles.ATTENDEE
     accountStatus: AccountStatus = AccountStatus.PENDING
@@ -32,8 +33,6 @@ class User(Document):
     avatar: str | None = None
     dob: datetime | None = None
     bio: str | None = None
-    createdAt: datetime = Field(default_factory=datetime.now)
-    updatedAt: datetime = Field(default_factory=datetime.now)
 
     class Settings:
         name = 'users'
