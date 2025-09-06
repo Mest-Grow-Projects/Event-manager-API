@@ -10,7 +10,7 @@ class UserInfo(BaseModel):
     name: str
     email: str
     phone: str | None = None
-    location: str | None = None
+    address: str | None = None
     role: Roles
     accountStatus: AccountStatus
     gender: Gender | None = None
@@ -40,7 +40,7 @@ class UpdateUserInfo(BaseModel):
     name: str | None = None
     email: str | None = None
     phone: str | None = None
-    location: str | None = None
+    address: str | None = None
     gender: Gender | None = None
     dob: datetime | None = None
     bio: str | None = None
