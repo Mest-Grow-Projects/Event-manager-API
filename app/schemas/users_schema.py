@@ -16,6 +16,7 @@ class UserInfo(BaseModel):
     gender: Gender | None = None
     avatar: str | None = None
     dob: datetime | None = None
+    bio: str | None = None
     createdAt: datetime
     updatedAt: datetime
 
@@ -42,6 +43,9 @@ class UpdateUserInfo(BaseModel):
     location: str | None = None
     gender: Gender | None = None
     dob: datetime | None = None
+    bio: str | None = None
+
+    model_config = {"extra": "forbid"}
 
 class ChangeRole(BaseModel):
     role: Roles
