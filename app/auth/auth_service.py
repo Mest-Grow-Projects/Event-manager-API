@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, BackgroundTasks
 from app.core.config.constants import validations, success_messages, status_messages
 from app.core.security.password_hash import verify_password
 from app.schemas.auth_schema import SignupSchema, LoginSchema, VerifyAccount
@@ -12,6 +12,7 @@ from app.utils.auth_utils import (
 from datetime import timedelta, datetime, timezone
 import jwt
 from decouple import config
+from app.mailer.service.email_service import send_verify_account_mail
 
 JWT_SECRET = config("JWT_SECRET")
 
@@ -21,8 +22,8 @@ class AuthService:
         self.jwt_algorithm = jwt_algorithm
         self.signup_token_duration = timedelta(minutes=30)
 
-    async def signup(self, user: SignupSchema):
-        await create_user(user)
+    async def signup(self, user: SignupSchema, background_tasks: BackgroundTasks):
+        new_user = await create_user(user)
         verification_code = generate_verification_code()
 
         payload = {
@@ -32,6 +33,12 @@ class AuthService:
         }
         token = jwt.encode(payload, self.secret_key, algorithm=self.jwt_algorithm)
 
+        await send_verify_account_mail(
+            background_tasks=background_tasks,
+            name=new_user.name,
+            code=verification_code,
+            to=[user.email],
+        )
         return {
             'message': success_messages['signup'],
             'data': {
