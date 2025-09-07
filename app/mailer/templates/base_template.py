@@ -60,6 +60,30 @@ def email_template (content: str) -> str:
           font-weight: bold;
           color: #10107B;
         }}
+        
+        ul {{
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }}
+        
+        ul li {{
+            background: #f1f3ff;
+            margin: 8px 0;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+        }}
+        
+        ul li::before {{
+            content: "✔";
+            color: #10107B;
+            font-weight: bold;
+            margin-right: 10px;
+        }}
     
         .warning {{
           background-color: #FFF3CD;
