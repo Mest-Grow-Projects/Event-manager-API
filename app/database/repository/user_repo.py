@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from pydantic import BaseModel
 from app.core.security.password_hash import get_password_hash
 from app.database.models.user import User, Roles, AccountStatus
-from app.core.constants import status_messages
+from app.core.config.constants import status_messages
 from app.schemas.auth_schema import SignupSchema
 
 

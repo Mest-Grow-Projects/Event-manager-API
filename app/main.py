@@ -2,8 +2,8 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.database.db import init_db
-from app.core.constants import messages, origins
-from app.core.logging_config import logger
+from app.core.config.constants import messages, origins
+from app.core.config.logging_config import logger
 from app.core.security.auth_guard import get_authenticated_user
 
 from app.auth.auth_route import router as auth_router

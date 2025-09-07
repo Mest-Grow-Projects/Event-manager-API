@@ -1,4 +1,4 @@
-from app.core.constants import success_messages
+from app.core.config.constants import success_messages
 from app.database.repository.user_repo import create_user, get_and_validate_user, validate_updated_data
 from app.database.models.user import User, AccountStatus, Roles
 from app.schemas.auth_schema import SignupSchema

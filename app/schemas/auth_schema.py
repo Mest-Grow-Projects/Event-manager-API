@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, EmailStr, Field, model_validator, field_validator
 import re
-from app.core.constants import validations, patterns_regex
+from app.core.config.constants import validations, patterns_regex
 from beanie import PydanticObjectId
 from enum import Enum
 

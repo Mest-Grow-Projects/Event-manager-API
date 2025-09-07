@@ -1,6 +1,6 @@
 from typing import Annotated
 from fastapi import Header, HTTPException, status
-from app.core.constants import status_messages, validations, error_messages
+from app.core.config.constants import status_messages, validations, error_messages
 from app.database.repository.user_repo import find_user_by_id
 from app.schemas.auth_schema import UserResponse
 from app.utils.auth_utils import decode_jwt

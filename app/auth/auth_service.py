@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from app.core.constants import validations, success_messages, status_messages
+from app.core.config.constants import validations, success_messages, status_messages
 from app.core.security.password_hash import verify_password
 from app.schemas.auth_schema import SignupSchema, LoginSchema, VerifyAccount
 from app.database.models.user import AccountStatus
