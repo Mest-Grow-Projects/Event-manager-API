@@ -1,41 +1,49 @@
 import random
 from datetime import timedelta, datetime, timezone
-from typing import Any
-
+from typing import Dict
 import jwt
-from app.core.config import get_settings
+from app.schemas.auth_schema import AuthToken, UserResponse
+from decouple import config
 
-
-SECRET_KEY = get_settings().SECRET_KEY
-ALGORITHM = get_settings().ALGORITHM
-access_token_expire = get_settings().ACCESS_TOKEN_EXPIRE_MINUTES
-refresh_token_expire = get_settings().REFRESH_TOKEN_EXPIRE_DAYS
-
-
-def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=access_token_expire)
-
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-
-def create_refresh_token(data: dict) -> str:
-    expires = timedelta(days=refresh_token_expire)
-    return create_access_token(data, expires_delta=expires)
+JWT_SECRET = config("JWT_SECRET")
+JWT_ALGORITHM = config("JWT_ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
+REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 
 def generate_verification_code() -> str:
     return str(random.randint(100000, 999999))
 
 
+def sign_jwt(payload: dict) -> str:
+    token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    return token
+
+
 def decode_jwt(token: str) -> dict | None:
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
-    except jwt.InvalidTokenError:
-        return None
+    return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+
+
+def create_login_tokens(user_data: UserResponse) -> Dict[str, str]:
+    access_token_expires = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    refresh_token_expires = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+
+    access_payload = user_data.model_dump()
+    access_payload["id"] = str(access_payload["id"])
+    access_payload.update({
+        "exp": access_token_expires,
+        "token_type": AuthToken.ACCESS.value
+    })
+    access_token = sign_jwt(access_payload)
+
+    refresh_payload = {
+        "sub": str(user_data.id),
+        "exp": refresh_token_expires,
+        "token_type": AuthToken.REFRESH_TOKEN.value
+    }
+    refresh_token = sign_jwt(refresh_payload)
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token
+    }
