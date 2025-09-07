@@ -8,7 +8,9 @@ messages = {
 }
 
 error_messages = {
-    "database_url": "DATABASE_URL environment variable is not set"
+    "database_url": "DATABASE_URL environment variable is not set",
+    "internal_error": "An internal server error occurred",
+    "expired_token": "Token has expired, please login again",
 }
 
 status_messages = {
@@ -60,4 +62,5 @@ validations = {
     "token_required": "Token is required",
     "invalid_code": "Verification code is not valid",
     "invalid_token": "Invalid token",
+    "invalid_payload": "Invalid token payload",
 }
