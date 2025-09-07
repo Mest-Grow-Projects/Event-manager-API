@@ -3,3 +3,4 @@ beanie
 pydantic-settings
 pyjwt
 passlib[bcrypt]
+python-decouple==3.8
