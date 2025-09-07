@@ -1,11 +1,18 @@
+from typing import Annotated
+
 from pydantic import BaseModel, EmailStr, Field, model_validator, field_validator
 import re
 from app.core.constants import validations, patterns_regex
+from beanie import PydanticObjectId
+from enum import Enum
 
 class Token(BaseModel):
     access_token: str
     refresh_token: str
-    token_type: str = "bearer"
+
+class AuthToken(str, Enum):
+  ACCESS = 'access-tk',
+  REFRESH_TOKEN = 'refresh-tk'
 
 class TokenData(BaseModel):
     sub: str | None = None
@@ -77,15 +84,15 @@ class VerifyAccountResponse(BaseModel):
     message: str
 
 class UserResponse(BaseModel):
-    id: str
+    id: Annotated[PydanticObjectId | str, Field(default=str)]
     name: str
     email: str
     accountStatus: str
     role: str
 
 class Data(BaseModel):
-    access_token: str
     user: UserResponse
+    token: Token
 
 class LoginResponse(BaseModel):
     message: str
