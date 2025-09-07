@@ -45,7 +45,7 @@ async def create_user(
     hashed_password = get_password_hash(user.password)
     new_user = User(
         name=user.name,
-        email=user.email,
+        email=str(user.email),
         password=hashed_password,
         role=role,
         accountStatus=account_status,
