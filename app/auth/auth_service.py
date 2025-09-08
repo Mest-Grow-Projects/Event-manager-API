@@ -12,9 +12,12 @@ from app.utils.auth_utils import (
 from datetime import timedelta, datetime, timezone
 import jwt
 from decouple import config
-from app.mailer.service.email_service import send_verify_account_mail
+from app.mailer.service.email_service import send_verify_account_mail, send_onboarding_mail
+from pydantic import EmailStr, TypeAdapter
+
 
 JWT_SECRET = config("JWT_SECRET")
+
 
 class AuthService:
     def __init__(self, secret_key: str, jwt_algorithm: str = "HS256"):
@@ -33,8 +36,8 @@ class AuthService:
         }
         token = jwt.encode(payload, self.secret_key, algorithm=self.jwt_algorithm)
 
-        await send_verify_account_mail(
-            background_tasks=background_tasks,
+        background_tasks.add_task(
+            send_verify_account_mail,
             name=new_user.name,
             code=verification_code,
             to=[user.email],
@@ -48,7 +51,12 @@ class AuthService:
         }
 
 
-    async def verify_account(self, data: VerifyAccount, token: str):
+    async def verify_account(
+        self,
+        data: VerifyAccount,
+        token: str,
+        background_tasks: BackgroundTasks
+    ):
         if not data.code:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -86,7 +94,15 @@ class AuthService:
                 )
 
             user.accountStatus = AccountStatus.VERIFIED
+            email = TypeAdapter(EmailStr).validate_python(user.email)
             await user.save()
+
+
+            background_tasks.add_task(
+                send_onboarding_mail,
+                name=user.name,
+                to=[email],
+            )
 
             return { "message": success_messages["verify_account"] }
         except jwt.ExpiredSignatureError:
