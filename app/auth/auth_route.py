@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, BackgroundTasks
 from .auth_service import auth_service
 from app.schemas.auth_schema import (
     SignupSchema,
@@ -20,8 +20,8 @@ router = APIRouter(
     summary="Register a new user",
     response_model=SignupResponse
 )
-async def signup_user(user: SignupSchema):
-    return await auth_service.signup(user)
+async def signup_user(user: SignupSchema, background_tasks: BackgroundTasks):
+    return await auth_service.signup(user, background_tasks)
 
 @router.post(
     "/verify-account",
@@ -29,8 +29,8 @@ async def signup_user(user: SignupSchema):
     summary="Verify a user's account with code",
     response_model=VerifyAccountResponse,
 )
-async def verify_user(data: VerifyAccount, token: str):
-    return await auth_service.verify_account(data, token)
+async def verify_user(data: VerifyAccount, token: str, background_tasks: BackgroundTasks):
+    return await auth_service.verify_account(data, token, background_tasks)
 
 @router.post(
     "/login",
